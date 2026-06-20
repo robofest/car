@@ -39,21 +39,30 @@
         }
 
         .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
+           width: 100%;
+           display: flex;
+           align-items: center;
+           padding: 10px 20px;
+           background-color: var(--primary-blue);
         }
 
-        .logo-container img {
-            width: 300px;
-            height: 50px;
-            display: inline;
+        .navbar-logo {
+           display: flex;
+           align-items: center;
+           margin-right: 30px;
+        }
+
+        .navbar-logo img {
+           height: 60px;
+           width: auto;
+           display: block;
         }
 
         /* NAVIGATION MENU */
+        nav {
+            flex 1;
+        }
+        
         nav ul {
             display: flex;
             list-style: none;
@@ -181,14 +190,14 @@
 <body>
 
     <header>
-        <div class="logo-container">
+        
+        <div class="nav-container">
+            <div class="logo-container">
                 <img src="ltu_oneline_logo.png" alt="Lawrence Technological University Logo">  &emsp;
             </div>
             <div class="logo-container">
                 <img src="CarLabLogo.png" alt="The CART Lab">  &emsp;
-        </div>
-        <div class="nav-container">
-           
+            </div>
             <nav>
                 <ul>
                     <li class="nav-item active" data-target="home"><a onclick="navigateTo('home')">Home</a></li>
