@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAR Lab - CS AI Robotics | Lawrence Technological University</title>
+    <style>
+        /* CSS VARIABLES (Color sampled from color.jpg) */
+        :root {
+            --primary-blue: #092c4c; /* Deep navy from color.jpg */
+            --ltu-blue: #007bc4;     /* LTU Brand Blue */
+            --light-bg: #f4f6f9;
+            --text-dark: #333333;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* NAVBAR & LOGO */
+        header {
+            background-color: var(--primary-blue);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .logo-container img {
+            height: 45px;
+            display: block;
+        }
+
+        /* NAVIGATION MENU */
+        nav ul {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+
+        nav ul li {
+            position: relative;
+        }
+
+        nav ul li a {
+            color: var(--white);
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: background 0.3s, color 0.3s;
+            cursor: pointer;
+        }
+
+        nav ul li a:hover, nav ul li.active > a {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #e0e0e0;
+        }
+
+        /* JAVASCRIPT DROPDOWN SUB-MENUS */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: var(--primary-blue);
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border-top: 3px solid var(--ltu-blue);
+        }
+
+        .dropdown-menu li a {
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Show class toggled via JavaScript */
+        .show-dropdown {
+            display: block !important;
+        }
+
+        /* LAB IMAGES (Header Banner & Footer) */
+        .lab-banner {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .lab-footer-img {
+            width: 100%;
+            max-height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* MAIN CONTENT AREA */
+        .main-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            flex: 1;
+            width: 100%;
+        }
+
+        .content-section {
+            display: none; /* Controlled by JS Router */
+            background: var(--white);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active-section {
+            display: block;
+        }
+
+        h1 {
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--ltu-blue);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: var(--primary-blue);
+            margin: 20px 0 10px 0;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* FOOTER */
+        footer {
+            margin-top: auto;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .footer-credits {
+            padding: 15px 20px;
+            font-size: 0.85rem;
+            background-color: rgba(0,0,0,0.2);
+        }
+
+        /* ANIMATION */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo-container">
+                <img src="ltu_oneline_logo.png" alt="Lawrence Technological University Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li class="nav-item active" data-target="home"><a onclick="navigateTo('home')">Home</a></li>
+                    <li class="nav-item" data-target="about"><a onclick="navigateTo('about')">About</a></li>
+                    <li class="nav-item" data-target="members"><a onclick="navigateTo('members')">Members</a></li>
+                    
+                    <li class="nav-item has-dropdown">
+                        <a onclick="toggleDropdown(event, 'competitions-drop')">Competitions ▾</a>
+                        <ul class="dropdown-menu" id="competitions-drop">
+                            <li><a onclick="navigateTo('comp-igvc')">IGVC (Intelligent Ground Vehicle)</a></li>
+                            <li><a onclick="navigateTo('comp-evgrandprix')">EV Grand Prix</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item has-dropdown">
+                        <a onclick="toggleDropdown(event, 'projects-drop')">Projects ▾</a>
+                        <ul class="dropdown-menu" id="projects-drop">
+                            <li><a onclick="navigateTo('proj-autonomous')">Autonomous Self-Driving Car</a></li>
+                            <li><a onclick="navigateTo('proj-computer-vision')">Computer Vision & Machine Learning</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item" data-target="publications"><a onclick="navigateTo('publications')">Publications</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <img src="car_lab_header.jpg" alt="CAR Lab Robotics Banner" class="lab-banner">
+
+    <main class="main-container">
+        
+        <section id="home" class="content-section active-section">
+            <h1>Welcome to the CS AI Robotics (CAR) Lab</h1>
+            <p>Welcome to the central hub of advanced robotics and artificial intelligence research at Lawrence Technological University. The CAR Lab focuses on expanding the frontiers of autonomous platforms, computer vision applications, and intelligent vehicle engineering.</p>
+            <p>Explore our latest projects, join our competitive teams, or read through our recent publications using the navigation menu above.</p>
+        </section>
+
+        <section id="about" class="content-section">
+            <h1>About the Lab</h1>
+            <p>The Computer Science Artificial Intelligence Robotics (CAR) Lab provides undergraduate and graduate students with hands-on environments to develop production-ready software systems for autonomous mobility.</p>
+            <p>Our core research focuses on sensor fusion (LiDAR, Camera, Radar), deep reinforcement learning for obstacle avoidance, and real-time mapping environments.</p>
+        </section>
+
+        <section id="members" class="content-section">
+            <h1>Lab Members</h1>
+            <h2>Faculty Director</h2>
+            <p><strong>Dr. C. John</strong> - Associate Professor of Computer Science</p>
+            <h2>Research Assistants</h2>
+            <p>• Jane Doe (Ph.D. Candidate - Deep Learning focus)</p>
+            <p>• John Smith (M.S. Computer Science - Sensor Fusion)</p>
+        </section>
+
+        <section id="comp-igvc" class="content-section">
+            <h1>Intelligent Ground Vehicle Competition (IGVC)</h1>
+            <p>Our flagship autonomous platform is designed from scratch to navigate complex outdoor obstacle courses without human intervention, leveraging advanced lane detection algorithms and GPS waypoints.</p>
+        </section>
+
+        <section id="comp-evgrandprix" class="content-section">
+            <h1>EV Grand Prix</h1>
+            <p>Combining electric powertrain efficiency with computational mapping logic, our EV platform races at high speeds while testing battery thermal limits and adaptive motor controllers.</p>
+        </section>
+
+        <section id="proj-autonomous" class="content-section">
+            <h1>Autonomous Self-Driving Car</h1>
+            <p>Utilizing full-scale drive-by-wire converted platforms to implement end-to-end path planning, path tracking, and localized mapping frameworks inside dynamic urban mock-up environments.</p>
+        </section>
+
+        <section id="proj-computer-vision" class="content-section">
+            <h1>Computer Vision & Machine Learning</h1>
+            <p>Developing lightweight real-time object detection pipelines capable of running edge-computing workloads natively on vehicular microchips.</p>
+        </section>
+
+        <section id="publications" class="content-section">
+            <h1>Publications</h1>
+            <p>[1] Smith, J., Doe, J. "Real-time Multi-Object Tracking in Connected Autonomous Micro-Vehicles." <em>IEEE Transactions on Intelligent Vehicles</em>, 2025.</p>
+            <p>[2] John, C. "An Evaluative Framework for LiDAR Sensor Performance in Heavy Rain Environments." <em>International Conference on Robotics and Automation (ICRA)</em>, 2024.</p>
+        </section>
+
+    </main>
+
+    <footer>
+        <img src="car_lab_footer.jpg" alt="CAR Lab Overhead View Footer" class="lab-footer-img">
+        <div class="footer-credits">
+            &copy; 2026 CAR Lab | Computer Science Department | Lawrence Technological University. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script>
+        // FUNCTION TO TOGGLE DROPDOWN MENUS
+        function toggleDropdown(event, dropdownId) {
+            event.stopPropagation(); // Prevents immediate closing
+            
+            // Close all other dropdowns first
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                if(menu.id !== dropdownId) menu.classList.remove('show-dropdown');
+            });
+
+            const targetDropdown = document.getElementById(dropdownId);
+            targetDropdown.classList.toggle('show-dropdown');
+        }
+
+        // FUNCTION TO HANDLE PAGE INTERACTION & SINGLE-PAGE ROUTING
+        function navigateTo(sectionId) {
+            // Hide all content views
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active-section');
+            });
+
+            // Show selected view
+            const targetSection = document.getElementById(sectionId);
+            if(targetSection) {
+                targetSection.classList.add('active-section');
+            }
+
+            // Close all dropdown submenus gracefully
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.classList.remove('show-dropdown');
+            });
+
+            // Update active state style highlights on main navbar items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if(item.getAttribute('data-target') === sectionId) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // Close dropdowns if the user clicks anywhere else on the document window
+        window.onclick = function(event) {
+            if (!event.target.matches('.has-dropdown a')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show-dropdown');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
